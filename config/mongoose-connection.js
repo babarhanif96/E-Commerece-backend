@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
+const config = require('config');
+const debuger = require('debug')("development:mongoose");
 
-mongoose.connect('mongodb://127.0.0.1:27017/e-commerece')
-  .then(() => console.log('Connected!'));
+
+mongoose.connect(`${config.get("Mongodb_connectionURI")}/ecommerece`)
+  .then(() => debuger('Connected!'));
   
 
 module.exports = mongoose.connection;

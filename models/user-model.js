@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
-    name: {
+    fullname: {
         type: String,
         minLenght: 3,
         trim: true,
+        required: [true, 'Username is required'],
     },
     email: String,
+    
     password: String,
     phone: String,
     cartDetail: {
@@ -17,11 +19,8 @@ const userSchema = mongoose.Schema({
         type : Array,
         default: []
     },
-    picture: db,
+    picture: String,
     isAdmin: Boolean
 })
-
-
-
 
 module.exports = mongoose.model("user", userSchema);
