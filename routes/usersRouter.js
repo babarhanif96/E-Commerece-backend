@@ -1,42 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const userModel = require('../models/user-model');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const cookieparser = require('cookie-parser');
+const {registerUser, loginUser} = require('../controllers/authController')
 
-router.use(cookieparser());
+
+
 
 router.get('/', async (req, res) => {
     res.send('user router working');
 });
 
 
-router.post('/register', async (req, res) => {
+router.post('/register', registerUser )
 
-    try {
+router.post('/login', loginUser )
 
-        let { fullname, email, password } = req.body;
-        let user = await userModel.findOne({ email: email })
-        if (user) return res.send("user already exists");
 
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(password, salt, async (err, hash) => {
-                let created = await userModel.create({
-                    fullname,
-                    email,
-                    password: hash
-                });
-                let token = jwt.sign({ email: email, userid: created._id }, 'aman');
-                res.cookie("token", token);
-                console.log("token ", token)
-                res.send(created);
-            })
-        })
-    }
-    catch (err) {
-        res.send(err.message);
-    }
-})
+
+
 
 module.exports = router;
