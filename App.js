@@ -26,6 +26,7 @@ app.use(
         resave: false,
         saveUninitialized: false,
         secret:process.env.EXPRESS_SESSION_SECRET,
+        cookie: { maxAge: 60000 }
     })
 )
 

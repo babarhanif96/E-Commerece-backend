@@ -28,9 +28,16 @@ if (process.env.NODE_ENV === "development") {
 }
 
 
-
 router.get('/', async(req,res) =>{
     res.send('owner router working');
 });
+
+router.get('/admin', async(req,res) =>{
+    let success = req.flash("success")
+    res.render('createproducts', {success});
+});
+
+
+
 
 module.exports = router;

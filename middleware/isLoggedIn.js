@@ -1,26 +1,22 @@
-const jwt = require('jsonwebtoken');
-const userModel = require('../models/user-model');
+const jwt = require("jsonwebtoken");
+const userModel = require("../models/user-model");
 
+module.exports = async function (req, res, next) {
+  if (!req.cookies.token) {
+    console.log('1st 1')
+    req.flash("error", "you need to login first");
+    return res.redirect("/");
+  }
 
-module.exports = async(req,res,next) =>{
-    try{
-        if (req.cookies.token === " ") {
-           
-            req.flash("errror", "You need to login first")
-            return  res.redirect("/");
-        }  else {
-
-        let data = jwt.verify(req.cookies.token, process.env.JWT_KEY);
-        let user = userModel
-        .findOne({email: user.email })
-        .select("-password");
-
-        req.user = data;
-        next();
-    }
-    }
-    catch(err){
-        req.flash("error", "somth went wrong");
-        res.redirect('/');
-    }
-}
+  try {
+    let decoded = jwt.verify(req.cookies.token, process.env.JWT_KEY);
+    let user = await userModel
+      .findOne({ email: decoded.email })
+      .select("-password");
+    req.user = user;
+    next();
+  } catch (err) {
+    req.flash("error", "you need to login first");
+    res.redirect("/");
+  }
+};

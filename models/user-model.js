@@ -8,13 +8,15 @@ const userSchema = mongoose.Schema({
         required: [true, 'Username is required'],
     },
     email: String,
-    
+
     password: String,
     phone: String,
-    cartDetail: {
-        type : Array,
-        default: []
-    },
+    cartDetail: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'product'
+        }
+    ],
     orders : {
         type : Array,
         default: []
