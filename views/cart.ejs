@@ -7,9 +7,9 @@
         grandTotal += itemTotal ; // Assuming Platform Fee of Rs 20 applies to every item
 %>
 
-    <div class="w-full h-screen flex items-start px-20 py-20 gap-10">
-        <div class="w-[30%] rounded-md overflow-hidden">
-            <div class="w-full flex justify-center items-center h-80 bg-[<%= item.bgcolor %>]">
+    <div class="flex items-start px-20 py-20 gap-10">
+        <div class="w-[15%] rounded-md overflow-hidden">
+            <div class="w-full flex justify-center items-center h-50 bg-[<%= item.bgcolor %>]">
                 <img class="h-[15rem]" src="data:image/jpeg;base64, <%= item.image.toString('base64') %>" alt="">
             </div>
             <div class="w-full flex justify-between px-5 py-4 bg-[<%= item.panelcolor %>]" >
