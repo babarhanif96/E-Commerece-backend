@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
             quantity: {
                 type: Number,
                 required: true,
-                min: 1, // Minimum quantity is 1
+                min: 10, // Minimum quantity is 1
                 default: 1
             }
         }

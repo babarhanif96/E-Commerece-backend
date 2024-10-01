@@ -34,8 +34,6 @@ router.get('/addtocart/:productid',isLoggedIn,  async(req,res) =>{
  } )
 
 
-
-
 router.get('/delete/:productid', isLoggedIn, async (req, res) => {
     try {
         // Find the user by their email
@@ -53,6 +51,28 @@ router.get('/delete/:productid', isLoggedIn, async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+router.get('/increase/:productId', isLoggedIn,  async(req,res)=>{
+
+
+    try {
+        let user = await userModel.findOne({email: req.user.email});
+        const productIdToAdd = new mongoose.Types.ObjectId(req.params.productId)
+        const cartItem = await user.cartDetail.find(item => item.productId.toString() === productIdToAdd);
+        console.log(user);
+        if (cartItem) {
+            cartItem.quantity += 1;
+           
+        } else {
+            return res.status(404).json({ message: 'Product not found in cart' });
+        }
+
+        await user.save();
+        return res.status(200).json({ message: 'Product quantity increased', cart: user.cartDetail });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error updating cart', error });
+    }
+ })
 
 
    
