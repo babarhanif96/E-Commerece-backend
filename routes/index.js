@@ -56,22 +56,37 @@ router.get('/increase/:productId', isLoggedIn,  async(req,res)=>{
 
 
     try {
-        let user = await userModel.findOne({email: req.user.email});
-        const productIdToAdd = new mongoose.Types.ObjectId(req.params.productId)
-        const cartItem = await user.cartDetail.find(item => item.productId.toString() === productIdToAdd);
-        console.log(user);
+        let user = await userModel.findOne({ email: req.user.email });
+        const productIdToAdd = new mongoose.Types.ObjectId(req.params.productId);
+    
+        // Debugging to check the ID format
+        console.log("Product ID to add:", productIdToAdd.toString());
+        
+        console.log("Cart details:", user.cartDetail);
+    
+        // Find the cart item using the correct `productId`
+        const cartItem = user.cartDetail.find(item => {
+            console.log("Comparing:", item.productId.toString(), "with", productIdToAdd.toString());
+            return item.productId.toString() === productIdToAdd.toString();
+        });
+        console.log(cartItem);
+
+        
+        // Check if the cart item exists
         if (cartItem) {
-            cartItem.quantity += 1;
-           
+            cartItem.quantity += 1;  // Increase the quantity
         } else {
             return res.status(404).json({ message: 'Product not found in cart' });
         }
-
+    
+        // Save the updated user document
         await user.save();
         return res.status(200).json({ message: 'Product quantity increased', cart: user.cartDetail });
+    
     } catch (error) {
         return res.status(500).json({ message: 'Error updating cart', error });
     }
+    
  })
 
 

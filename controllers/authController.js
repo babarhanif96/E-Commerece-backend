@@ -29,7 +29,7 @@ module.exports.registerUser =  async (req,res )=> {
                   fullname,
                 });
       
-                let token = generateToken(user);
+                let token = tokenGenerator(user);
                 res.cookie("token", token);
                 console.log('Redirecting to shop signup');
 
