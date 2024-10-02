@@ -8,7 +8,6 @@ const userSchema = mongoose.Schema({
         required: [true, 'Username is required'],
     },
     email: String,
-
     password: String,
     phone: String,
     cartDetail: [
@@ -20,7 +19,7 @@ const userSchema = mongoose.Schema({
             quantity: {
                 type: Number,
                 required: true,
-                min: 10, // Minimum quantity is 1
+                min: 1, // Minimum quantity is 1
                 default: 1
             }
         }
@@ -29,7 +28,7 @@ const userSchema = mongoose.Schema({
         type : Array,
         default: []
     },
-    picture: String,
+    picture: Buffer,
     isAdmin: Boolean
 })
 
