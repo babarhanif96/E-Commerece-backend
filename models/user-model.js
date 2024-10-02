@@ -12,16 +12,8 @@ const userSchema = mongoose.Schema({
     phone: String,
     cartDetail: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'product'
-        },
-        {
-            quantity: {
-                type: Number,
-                required: true,
-                min: 1, // Minimum quantity is 1
-                default: 1
-            }
+            product: { type: mongoose.Schema.Types.ObjectId, ref: 'product' },
+            quantity: { type: Number, default: 1 }
         }
     ],
     orders : {

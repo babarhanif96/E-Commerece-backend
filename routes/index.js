@@ -17,30 +17,59 @@ router.get('/shop',isLoggedIn,  async(req,res) =>{
 } )
 
 router.get('/cart',isLoggedIn,  async(req,res) =>{
-  let user = await userModel.findOne({email: req.user.email}).populate('cartDetail');
+  let user = await userModel.findOne({email: req.user.email}).populate('cartDetail.product');
 
-   //console.log(user, 'user')
+   console.log(user, 'user')
      res.render('cart', {user});
  } )
  
- 
 
-router.get('/addtocart/:productid',isLoggedIn,  async(req,res) =>{
-   let user = await userModel.findOne({email: req.user.email});
-   //console.log("user", user)
-   user.cartDetail.push(req.params.productid);
- 
-   await user.save();
-  req.flash("success", "added to the cart");
-   res.redirect('/shop');
- } )
+router.get('/addtocart/:productid', isLoggedIn, async (req, res) => {
+    let user = await userModel.findOne({ email: req.user.email });
+    let productIndex = user.cartDetail.findIndex(item => item.product === req.params.productid.toString());
+
+    if (productIndex > -1) {
+        // Product already in cart, increase quantity
+        user.cartDetail[productIndex].quantity += 1;
+    } else {
+        // Add new product to cart
+        user.cartDetail.push({ product: req.params.productid, quantity: 1 });
+    }
+
+    await user.save();
+    req.flash("success", "Added to cart");
+    res.redirect('/shop');
+});
+
+router.get('/increase/:productid', isLoggedIn, async (req, res) => {
+    let user = await userModel.findOne({ email: req.user.email });
+    let productIndex = user.cartDetail.findIndex(item => item.product.toString() === req.params.productid);
+
+    if (productIndex > -1) {
+        user.cartDetail[productIndex].quantity += 1;
+        await user.save();
+    }
+
+    res.redirect('/cart');
+});
+
+router.get('/decrease/:productid', isLoggedIn, async (req, res) => {
+    let user = await userModel.findOne({ email: req.user.email });
+    let productIndex = user.cartDetail.findIndex(item => item.product.toString() === req.params.productid);
+
+    if (productIndex > -1) {
+        user.cartDetail[productIndex].quantity -= 1;
+        await user.save();
+    }
+
+    res.redirect('/cart');
+});
 
 
 router.get('/delete/:productid', isLoggedIn, async (req, res) => {
     try {
         let user = await userModel.findOne({ email: req.user.email });
-        const productIdToRemove = new mongoose.Types.ObjectId(req.params.productid);
-        user.cartDetail = user.cartDetail.filter(item => item.toString() !== productIdToRemove.toString());
+        user.cartDetail = user.cartDetail.filter(item => item.product.toString() !== req.params.productid);
         await user.save();
         res.redirect('/cart');
     } catch (error) {
@@ -49,9 +78,10 @@ router.get('/delete/:productid', isLoggedIn, async (req, res) => {
     }
 });
 
+router.get('/account', async(req,res)=> {
+    res.render('myaccount');
+})
 
-
-   
 
 router.get('/logout', isLoggedIn,  function(req,res){
     res.render("shop");
