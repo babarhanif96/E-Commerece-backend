@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
         type : Array,
         default: []
     },
-    picture: Buffer,
+    image: Buffer,
     isAdmin: Boolean
 })
 
