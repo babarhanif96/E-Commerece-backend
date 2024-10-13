@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { tokenGenerator } = require("../utils/tokenGenerator");
 
-
+//check changings
 
 module.exports.registerUser =  async (req,res )=> {
     try {
